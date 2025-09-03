@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
 
 interface Page {
@@ -25,7 +25,9 @@ interface ChildPage {
 export default function Navbar() {
   const [pages, setPages] = useState<Page[]>([]);
   const [childPages, setChildPages] = useState<ChildPage[]>([]);
-  const [openPageId, setOpenPageId] = useState<number | null>(null); // track which dropdown is open
+  const [openPageId, setOpenPageId] = useState<number | null>(null); // desktop hover
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpenPageId, setMobileOpenPageId] = useState<number | null>(null); // mobile toggle
 
   useEffect(() => {
     async function fetchData() {
@@ -52,9 +54,10 @@ export default function Navbar() {
     childPages.filter((child) => child.page?.id === pageId);
 
   return (
-    <nav className="bg-black text-white px-10 py-7 pr-25">
+    <nav className="bg-black text-white px-6 py-5 pr-1 pr-25 whitespace-nowrap">
       <div className="flex justify-between items-center">
-        {/* Logo on the left */}
+
+        {/* Logo */}
         <Link href="/home" className="text-xl font-bold hover:text-[#48bdcb]">
           <Image
             src="/images/Full-service-logo.png"
@@ -65,8 +68,8 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Pages on the right */}
-        <div className="flex gap-12">
+        {/* Desktop Links */}
+        <div className="hidden md:flex gap-10">
           {pages.map((page) => {
             const children = getChildren(page.id);
 
@@ -77,20 +80,18 @@ export default function Navbar() {
                 onMouseEnter={() => setOpenPageId(page.id)}
                 onMouseLeave={() => setOpenPageId(null)}
               >
-                {/* Parent page */}
-                <div className="flex items-center gap-1 text-xl hover:text-[#48bdcb] cursor-pointer">
+                <div className="flex items-center gap-2 text-xl hover:text-[#48bdcb] cursor-pointer">
                   {page.title}
                   {children.length > 0 && <ChevronDown size={16} />}
                 </div>
 
-                {/* Dropdown */}
                 {children.length > 0 && openPageId === page.id && (
                   <div className="absolute left-0 top-full bg-black rounded-lg shadow-lg text-white z-50 w-88">
                     {children.map((child) => (
                       <Link
                         key={child.id}
                         href={`/${page.slug}/${child.slug}`}
-                        className="block px-4 py-3 whitespace-nowrap hover:bg-gray-700 hover:text-[#48bdcb] border-b-1 border-[#48bdcb]"
+                        className="block px-4 py-4 whitespace-nowrap hover:bg-gray-700 hover:text-[#48bdcb]"
                       >
                         {child.title}
                       </Link>
@@ -101,7 +102,60 @@ export default function Navbar() {
             );
           })}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-white hover:text-[#48bdcb]"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden mt-2 bg-black rounded-lg shadow-lg">
+          {pages.map((page) => {
+            const children = getChildren(page.id);
+            const isOpen = mobileOpenPageId === page.id;
+
+            return (
+              <div key={page.id} className="border-b border-gray-800">
+                {/* Parent item */}
+                <div
+                  className="flex justify-between items-center px-4 py-3 text-lg hover:text-[#48bdcb] cursor-pointer"
+                  onClick={() =>
+                    setMobileOpenPageId(isOpen ? null : page.id)
+                  }
+                >
+                  <Link href={`/${page.slug}`}>{page.title}</Link>
+                  {children.length > 0 && (
+                    <ChevronDown
+                      size={16}
+                      className={`${isOpen ? "rotate-180" : ""} transition-transform`}
+                    />
+                  )}
+                </div>
+
+                {/* Child items */}
+                {children.length > 0 && isOpen && (
+                  <div className="pl-6 pb-2">
+                    {children.map((child) => (
+                      <Link
+                        key={child.id}
+                        href={`/${page.slug}/${child.slug}`}
+                        className="block py-2 text-white hover:text-[#48bdcb]"
+                      >
+                        {child.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </nav>
   );
 }
