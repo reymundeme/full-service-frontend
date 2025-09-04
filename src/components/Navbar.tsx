@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 interface Page {
   id: number;
@@ -23,13 +24,17 @@ interface ChildPage {
 }
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false); // ✅ prevent hydration mismatch
   const [pages, setPages] = useState<Page[]>([]);
   const [childPages, setChildPages] = useState<ChildPage[]>([]);
-  const [openPageId, setOpenPageId] = useState<number | null>(null); // desktop hover
+  const [openPageId, setOpenPageId] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileOpenPageId, setMobileOpenPageId] = useState<number | null>(null); // mobile toggle
+  const [mobileOpenPageId, setMobileOpenPageId] = useState<number | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+
     async function fetchData() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
@@ -50,21 +55,23 @@ export default function Navbar() {
     fetchData();
   }, []);
 
+  if (!mounted) return null; // ✅ wait until hydration to avoid mismatch
+
   const getChildren = (pageId: number) =>
     childPages.filter((child) => child.page?.id === pageId);
 
   return (
-    <nav className="bg-black text-white px-6 py-5 pr-1 pr-25 whitespace-nowrap">
+    <nav className="sticky top-0 z-50 bg-black text-white px-6 py-7 md:pr-15 lg:pr-25 whitespace-nowrap">
       <div className="flex justify-between items-center">
-
         {/* Logo */}
-        <Link href="/home" className="text-xl font-bold hover:text-[#48bdcb]">
+        <Link href="/" className="text-xl font-bold hover:text-[#48bdcb]">
           <Image
             src="/images/Full-service-logo.png"
             alt="Full Service Agency"
             width={120}
             height={40}
             className="h-10 w-auto"
+            priority
           />
         </Link>
 
@@ -72,6 +79,10 @@ export default function Navbar() {
         <div className="hidden md:flex gap-10">
           {pages.map((page) => {
             const children = getChildren(page.id);
+            const isActiveParent =
+              pathname === `/${page.slug}` ||
+              pathname.startsWith(`/${page.slug}/`) ||
+              (page.slug === "home" && pathname === "/");
 
             return (
               <div
@@ -80,22 +91,39 @@ export default function Navbar() {
                 onMouseEnter={() => setOpenPageId(page.id)}
                 onMouseLeave={() => setOpenPageId(null)}
               >
-                <div className="flex items-center gap-2 text-xl hover:text-[#48bdcb] cursor-pointer">
+                {/* Parent Page Link */}
+                <Link
+                  href={`/${page.slug === "home" ? "" : page.slug}`}
+                  className={`flex items-center gap-2 text-xl transition-colors duration-300 ease-in-out ${
+                    isActiveParent
+                      ? "text-[#48bdcb]"
+                      : "hover:text-[#48bdcb]"
+                  }`}
+                >
                   {page.title}
                   {children.length > 0 && <ChevronDown size={16} />}
-                </div>
+                </Link>
 
+                {/* Dropdown */}
                 {children.length > 0 && openPageId === page.id && (
-                  <div className="absolute left-0 top-full bg-black rounded-lg shadow-lg text-white z-50 w-88">
-                    {children.map((child) => (
-                      <Link
-                        key={child.id}
-                        href={`/${page.slug}/${child.slug}`}
-                        className="block px-4 py-4 whitespace-nowrap hover:bg-gray-700 hover:text-[#48bdcb]"
-                      >
-                        {child.title}
-                      </Link>
-                    ))}
+                  <div className="absolute left-0 top-full bg-black rounded-lg shadow-lg text-white z-50 w-64">
+                    {children.map((child) => {
+                      const isActiveChild =
+                        pathname === `/${page.slug}/${child.slug}`;
+                      return (
+                        <Link
+                          key={child.id}
+                          href={`/${page.slug}/${child.slug}`}
+                          className={`block px-4 py-3 whitespace-nowrap ${
+                            isActiveChild
+                              ? "text-[#48bdcb] bg-gray-800"
+                              : "hover:bg-gray-700 hover:text-[#48bdcb]"
+                          }`}
+                        >
+                          {child.title}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -118,37 +146,61 @@ export default function Navbar() {
           {pages.map((page) => {
             const children = getChildren(page.id);
             const isOpen = mobileOpenPageId === page.id;
+            const isActiveParent =
+              pathname === `/${page.slug}` ||
+              pathname.startsWith(`/${page.slug}/`) ||
+              (page.slug === "home" && pathname === "/");
 
             return (
               <div key={page.id} className="border-b border-gray-800">
                 {/* Parent item */}
-                <div
-                  className="flex justify-between items-center px-4 py-3 text-lg hover:text-[#48bdcb] cursor-pointer"
-                  onClick={() =>
-                    setMobileOpenPageId(isOpen ? null : page.id)
-                  }
-                >
-                  <Link href={`/${page.slug}`}>{page.title}</Link>
+                <div className="flex justify-between items-center px-4 py-3 text-lg">
+                  <Link
+                    href={`/${page.slug === "home" ? "" : page.slug}`}
+                    className={`${
+                      isActiveParent
+                        ? "text-[#48bdcb]"
+                        : "hover:text-[#48bdcb]"
+                    }`}
+                  >
+                    {page.title}
+                  </Link>
                   {children.length > 0 && (
-                    <ChevronDown
-                      size={16}
-                      className={`${isOpen ? "rotate-180" : ""} transition-transform`}
-                    />
+                    <button
+                      onClick={() =>
+                        setMobileOpenPageId(isOpen ? null : page.id)
+                      }
+                    >
+                      <ChevronDown
+                        size={16}
+                        className={`${
+                          isOpen ? "rotate-180" : ""
+                        } transition-transform`}
+                      />
+                    </button>
                   )}
                 </div>
 
                 {/* Child items */}
                 {children.length > 0 && isOpen && (
                   <div className="pl-6 pb-2">
-                    {children.map((child) => (
-                      <Link
-                        key={child.id}
-                        href={`/${page.slug}/${child.slug}`}
-                        className="block py-2 text-white hover:text-[#48bdcb]"
-                      >
-                        {child.title}
-                      </Link>
-                    ))}
+                    {children.map((child) => {
+                      const isActiveChild =
+                        pathname === `/${page.slug}/${child.slug}`;
+                      return (
+                        <Link
+                          key={child.id}
+                          href={`/${page.slug}/${child.slug}`}
+                          className={`block py-2 transition-colors duration-300 ease-in-out ${
+                            isActiveChild
+                              ? "text-[#48bdcb]"
+                              : "hover:text-[#48bdcb]"
+                          }`}
+                        >
+                          {child.title}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
