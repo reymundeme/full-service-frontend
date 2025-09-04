@@ -18,14 +18,12 @@ interface ChildPage {
   slug: string;
   page: {
     id: number;
-    title: string;
-    slug: string;
   };
 }
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false); // ✅ prevent hydration mismatch
+  const [mounted, setMounted] = useState(false);
   const [pages, setPages] = useState<Page[]>([]);
   const [childPages, setChildPages] = useState<ChildPage[]>([]);
   const [openPageId, setOpenPageId] = useState<number | null>(null);
@@ -45,7 +43,14 @@ export default function Navbar() {
         const childRes = await fetch(`${baseUrl}/api/child-pages?populate=page`);
         const childData = await childRes.json();
 
-        setPages(pageData.data || []);
+        // Custom order by slug
+        const order = ["home", "industries", "who-we-are", "what-we-do", "contact-us", "careers"];
+
+        const sortedPages = [...(pageData.data || [])].sort(
+          (a, b) => order.indexOf(a.slug) - order.indexOf(b.slug)
+        );
+
+        setPages(sortedPages);
         setChildPages(childData.data || []);
       } catch (error) {
         console.error("Failed to fetch navbar data:", error);
@@ -55,10 +60,9 @@ export default function Navbar() {
     fetchData();
   }, []);
 
-  if (!mounted) return null; // ✅ wait until hydration to avoid mismatch
+  if (!mounted) return null;
 
-  const getChildren = (pageId: number) =>
-    childPages.filter((child) => child.page?.id === pageId);
+  const getChildren = (pageId: number) => childPages.filter((child) => child.page?.id === pageId);
 
   return (
     <nav className="sticky top-0 z-50 bg-black text-white px-6 py-7 md:pr-15 lg:pr-25 whitespace-nowrap">
@@ -91,25 +95,20 @@ export default function Navbar() {
                 onMouseEnter={() => setOpenPageId(page.id)}
                 onMouseLeave={() => setOpenPageId(null)}
               >
-                {/* Parent Page Link */}
                 <Link
                   href={`/${page.slug === "home" ? "" : page.slug}`}
-                  className={`flex items-center gap-2 text-xl transition-colors duration-300 ease-in-out ${
-                    isActiveParent
-                      ? "text-[#48bdcb]"
-                      : "hover:text-[#48bdcb]"
+                  className={`flex items-center gap-2 text-xl ${
+                    isActiveParent ? "text-[#48bdcb]" : "hover:text-[#48bdcb]"
                   }`}
                 >
                   {page.title}
                   {children.length > 0 && <ChevronDown size={16} />}
                 </Link>
 
-                {/* Dropdown */}
                 {children.length > 0 && openPageId === page.id && (
                   <div className="absolute left-0 top-full bg-black rounded-lg shadow-lg text-white z-50 w-64">
                     {children.map((child) => {
-                      const isActiveChild =
-                        pathname === `/${page.slug}/${child.slug}`;
+                      const isActiveChild = pathname === `/${page.slug}/${child.slug}`;
                       return (
                         <Link
                           key={child.id}
@@ -153,48 +152,33 @@ export default function Navbar() {
 
             return (
               <div key={page.id} className="border-b border-gray-800">
-                {/* Parent item */}
                 <div className="flex justify-between items-center px-4 py-3 text-lg">
                   <Link
                     href={`/${page.slug === "home" ? "" : page.slug}`}
-                    className={`${
-                      isActiveParent
-                        ? "text-[#48bdcb]"
-                        : "hover:text-[#48bdcb]"
-                    }`}
+                    className={`${isActiveParent ? "text-[#48bdcb]" : "hover:text-[#48bdcb]"}`}
                   >
                     {page.title}
                   </Link>
                   {children.length > 0 && (
-                    <button
-                      onClick={() =>
-                        setMobileOpenPageId(isOpen ? null : page.id)
-                      }
-                    >
+                    <button onClick={() => setMobileOpenPageId(isOpen ? null : page.id)}>
                       <ChevronDown
                         size={16}
-                        className={`${
-                          isOpen ? "rotate-180" : ""
-                        } transition-transform`}
+                        className={`${isOpen ? "rotate-180" : ""} transition-transform`}
                       />
                     </button>
                   )}
                 </div>
 
-                {/* Child items */}
                 {children.length > 0 && isOpen && (
                   <div className="pl-6 pb-2">
                     {children.map((child) => {
-                      const isActiveChild =
-                        pathname === `/${page.slug}/${child.slug}`;
+                      const isActiveChild = pathname === `/${page.slug}/${child.slug}`;
                       return (
                         <Link
                           key={child.id}
                           href={`/${page.slug}/${child.slug}`}
-                          className={`block py-2 transition-colors duration-300 ease-in-out ${
-                            isActiveChild
-                              ? "text-[#48bdcb]"
-                              : "hover:text-[#48bdcb]"
+                          className={`block py-2 ${
+                            isActiveChild ? "text-[#48bdcb]" : "hover:text-[#48bdcb]"
                           }`}
                         >
                           {child.title}

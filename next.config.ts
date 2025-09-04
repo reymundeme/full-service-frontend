@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: [
+      "precious-dinosaur-99506b8ce1.media.strapiapp.com", // add your Strapi media host
+    ],
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
