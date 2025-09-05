@@ -1,11 +1,19 @@
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+// next.config.ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
-    domains: [
-      "precious-dinosaur-99506b8ce1.media.strapiapp.com", // add your Strapi media host
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "precious-dinosaur-99506b8ce1.media.strapiapp.com",
+      },
     ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

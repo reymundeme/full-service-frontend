@@ -1,4 +1,6 @@
 import Hero from "@/components/Hero";
+import Section1 from "@/components/Section1";
+import Section2 from "@/components/Section2";
 
 async function getHomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
@@ -18,27 +20,67 @@ export default async function Home() {
 
   if (!page) return <div className="p-10 text-center">Home page not found</div>;
 
-  const heroSection = page.sections?.find(
-    (section: any) => section.__component === "sections.hero"
-  );
-
-  if (!heroSection)
-    return <div className="p-10 text-center">Hero section not found</div>;
-
   return (
     <main>
-      <Hero
-        title={heroSection.Title}
-        subtitle={heroSection.Subtitle}
-        backgroundImage={
-          heroSection.BackgroundImage?.formats?.large ||
-          heroSection.BackgroundImage?.url
-            ? { url: heroSection.BackgroundImage?.url || heroSection.BackgroundImage?.formats?.large?.url }
-            : undefined
+      {page.sections?.map((section: any, index: number) => {
+        switch (section.__component) {
+          case "sections.hero":
+            return (
+              <Hero
+                key={index}
+                title={section.Title}
+                subtitle={section.Subtitle}
+                backgroundImage={
+                  section.BackgroundImage?.formats?.large ||
+                  section.BackgroundImage?.url
+                    ? {
+                        url:
+                          section.BackgroundImage?.url ||
+                          section.BackgroundImage?.formats?.large?.url,
+                      }
+                    : undefined
+                }
+                buttonText={section.ButtonText}
+                buttonURL={section.ButtonURL}
+              />
+            );
+
+          case "sections.section1":
+            return (
+              <Section1
+                key={index}
+                title={section.title}
+                subtitle={section.subtitle}
+                content={section.content}
+                background={
+                  section.background ? { url: section.background.url } : undefined
+                }
+                image={section.image ? { url: section.image.url } : undefined}
+                buttonText={section.button_text}
+                buttonURL={section.button_url}
+              />
+            );
+
+          case "sections.section2":
+            return (
+              <Section2
+                key={index}
+                title={section.title}
+                subtitle={section.subtitle}
+                content={section.content}
+                background={
+                  section.background ? { url: section.background.url } : undefined
+                }
+                image={section.image ? { url: section.image.url } : undefined}
+                buttonText={section.button_text}
+                buttonURL={section.button_url}
+              />
+            );
+
+          default:
+            return null;
         }
-        buttonText={heroSection.ButtonText}
-        buttonURL={heroSection.ButtonURL}
-      />
+      })}
     </main>
   );
 }

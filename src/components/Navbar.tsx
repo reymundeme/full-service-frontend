@@ -74,7 +74,7 @@ export default function Navbar() {
             alt="Full Service Agency"
             width={120}
             height={40}
-            className="h-10 w-auto"
+            className="h-10 w-auto lg:block pr-5"
             priority
           />
         </Link>
