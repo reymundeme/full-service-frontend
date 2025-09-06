@@ -10,6 +10,8 @@ interface Section2Props {
   background?: { url: string };
   buttonText?: string;
   buttonURL?: string;
+  buttonText2?: string;   // ✅ Added
+  buttonURL2?: string;    // ✅ Added
 }
 
 export default function Section2({
@@ -20,10 +22,11 @@ export default function Section2({
   background,
   buttonText,
   buttonURL,
+  buttonText2,
+  buttonURL2,
 }: Section2Props) {
   return (
     <section className="relative py-36 text-white">
-      {/* Background */}
       {background?.url && (
         <Image
           src={background.url}
@@ -34,10 +37,8 @@ export default function Section2({
         />
       )}
 
-      {/* Two-column layout */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-        
-        {/* LEFT → Image */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center text-center lg:text-left">
+        {/* Left column */}
         {image?.url && (
           <div className="flex justify-center">
             <Image
@@ -50,24 +51,37 @@ export default function Section2({
           </div>
         )}
 
-        {/* RIGHT → Text */}
-        <div className="text-center lg:text-left">
+        {/* Right column */}
+        <div>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">{title}</h2>
           {subtitle && <p className="text-lg md:text-2xl mb-6">{subtitle}</p>}
           {content && (
             <div
-              className="prose prose-lg mb-6 text-gray-200"
+              className="prose prose-invert mb-6 text-gray-200 text-left"
               dangerouslySetInnerHTML={{ __html: content }}
             />
           )}
-          {buttonText && buttonURL && (
-            <a
-              href={buttonURL}
-              className="inline-block bg-[#48bdcb] text-black px-6 py-3 rounded-lg font-semibold hover:bg-[#36a9b6] transition-colors"
-            >
-              {buttonText}
-            </a>
-          )}
+
+          {/* Buttons */}
+          <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+            {buttonText && buttonURL && (
+              <a
+                href={buttonURL}
+                className="inline-block bg-black text-white px-14 py-4 rounded-xl font-extrabold hover:text-black hover:bg-[#36a9b6] transition-colors duration-400 shadow-xl/40"
+              >
+                {buttonText}
+              </a>
+            )}
+
+            {buttonText2 && buttonURL2 && (
+              <a
+                href={buttonURL2}
+                className="inline-block bg-[#48bdcb] text-black px-10 py-4 rounded-xl font-extrabold hover:bg-[#89e9f5] transition-colors duration-300 shadow-xl/40"
+              >
+                {buttonText2}
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </section>

@@ -10,6 +10,8 @@ interface Section1Props {
   background?: { url: string };
   buttonText?: string;
   buttonURL?: string;
+  buttonText2?: string;
+  buttonURL2?: string;
 }
 
 export default function Section1({
@@ -20,6 +22,8 @@ export default function Section1({
   background,
   buttonText,
   buttonURL,
+  buttonText2,
+  buttonURL2,
 }: Section1Props) {
   return (
     <section className="relative py-36 text-white">
@@ -40,18 +44,31 @@ export default function Section1({
           {subtitle && <p className="text-lg md:text-2xl mb-6">{subtitle}</p>}
           {content && (
             <div
-              className="prose prose-invert mb-6 text-gray-200"
+              className="prose prose-invert mb-6 text-gray-200 text-left"
               dangerouslySetInnerHTML={{ __html: content }}
             />
           )}
-          {buttonText && buttonURL && (
-            <a
-              href={buttonURL}
-              className="inline-block bg-[#48bdcb] text-black px-6 py-3 rounded-lg font-semibold hover:bg-[#36a9b6] transition-colors"
-            >
-              {buttonText}
-            </a>
-          )}
+
+          {/* Buttons */}
+          <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+            {buttonText && buttonURL && (
+              <a
+                href={buttonURL}
+                className="inline-block bg-black text-white px-10 py-4 rounded-xl font-extrabold hover:text-black hover:bg-[#36a9b6] transition-colors duration-400 shadow-xl/40"
+              >
+                {buttonText}
+              </a>
+            )}
+
+            {buttonText2 && buttonURL2 && (
+              <a
+                href={buttonURL2}
+                className="inline-block bg-[#48bdcb] text-black px-10 py-4 rounded-xl font-extrabold hover:bg-[#89e9f5] transition-colors duration-300 shadow-xl/40"
+              >
+                {buttonText2}
+              </a>
+            )}
+          </div>
         </div>
 
         {/* Right column */}

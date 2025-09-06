@@ -51,6 +51,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
+                buttonText2={section.button_text_2} 
+                buttonURL2={section.button_url_2}    
               />
             );
 
@@ -65,6 +67,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
+                buttonText2={section.button_text_2}   // ✅ Add this
+                buttonURL2={section.button_url_2}     // ✅ Add this
               />
             );
 

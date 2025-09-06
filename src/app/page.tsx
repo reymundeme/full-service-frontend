@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
+import ItemSection from "@/components/ItemSection"; // ✅ import ItemSection
 
 async function getHomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
@@ -58,6 +59,8 @@ export default async function Home() {
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
+                buttonText2={section.button_text_2}
+                buttonURL2={section.button_url_2}
               />
             );
 
@@ -74,6 +77,20 @@ export default async function Home() {
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
+                buttonText2={section.button_text_2}
+                buttonURL2={section.button_url_2}
+              />
+            );
+
+          case "sections.item-section": // ✅ handles repeatable items w/ background
+            return (
+              <ItemSection
+                key={index}
+                title={section.title}
+                items={section.item || []}
+                background={
+                  section.background ? { url: section.background.url } : undefined
+                }
               />
             );
 
