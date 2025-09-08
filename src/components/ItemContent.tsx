@@ -22,7 +22,7 @@ export default function ItemContent({
 }: ItemContentProps) {
   return (
     <div
-      className="relative p-6 rounded-2xl shadow-lg text-white w-full flex flex-col justify-between"
+      className="relative p-6 rounded-2xl shadow-lg text-white w-full flex flex-col justify-between bg-black"
       style={{
         backgroundImage: background?.url ? `url(${background.url})` : undefined,
         backgroundSize: "cover",
@@ -36,21 +36,24 @@ export default function ItemContent({
 
       {/* Content */}
       <div className="relative z-10">
+
+         {/* Title */}
+        <h3 className="text-xl font-bold mb-2 text-center">{title}</h3>
+
         {/* Icon */}
         {icon?.url && (
           <div className="mb-4">
             <Image
               src={icon.url}
               alt={title}
-              width={60}
-              height={60}
-              className="mx-auto"
+              width={70}
+              height={70}
+              className="mx-auto invert my-6"
             />
           </div>
         )}
 
-        {/* Title */}
-        <h3 className="text-xl font-bold mb-2 text-center">{title}</h3>
+       
 
         {/* Description */}
         <div
@@ -64,7 +67,7 @@ export default function ItemContent({
         <div className="relative z-10 text-center mt-4">
           <a
             href={buttonURL}
-            className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition"
+             className="inline-block bg-[#48bdcb] text-black px-8 py-3 rounded-xl font-bold hover:bg-[#89e9f5] transition-colors duration-300 shadow-xl/40"
           >
             {buttonText}
           </a>

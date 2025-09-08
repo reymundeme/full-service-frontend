@@ -1,12 +1,12 @@
 import Hero from "@/components/Hero";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
-import ItemSection from "@/components/ItemSection"; // ✅ import ItemSection
+import ItemSection from "@/components/ItemSection"; 
 
 async function getHomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
   const res = await fetch(
-    `${baseUrl}/api/pages?filters[slug][$eq]=home&populate[sections][populate]=*`,
+    `${baseUrl}/api/pages?filters[slug][$eq]=home&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon`,
     { cache: "no-store" }
   );
 
@@ -82,7 +82,7 @@ export default async function Home() {
               />
             );
 
-          case "sections.item-section": // ✅ handles repeatable items w/ background
+          case "sections.item-section": 
             return (
               <ItemSection
                 key={index}
