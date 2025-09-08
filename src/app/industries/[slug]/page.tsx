@@ -1,34 +1,25 @@
-// src/app/industries/[slug]/page.tsx
-
 import Hero from "@/components/Hero";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
 import ItemSection from "@/components/ItemSection";
-import { notFound } from "next/navigation";
 
-export default async function IndustryChildPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params; // ✅ slug = "entertainment-hospitality"
+export default async function IndustryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
-
-  // ✅ prepend "industries/" to match your Strapi slug values
   const res = await fetch(
-    `${baseUrl}/api/pages?filters[slug][$eq]=industries/${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon`,
+    `${baseUrl}/api/child-pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.item.background`,
     { cache: "no-store" }
   );
 
   const json = await res.json();
-  const page = json.data?.[0];
+  const industry = json.data?.[0];
 
-  if (!page) notFound();
+  if (!industry) return <div>Industry page not found</div>;
 
   return (
     <main>
-      {page.sections?.map((section: any, index: number) => {
+      {industry.sections?.map((section: any, index: number) => {
         switch (section.__component) {
           case "sections.hero":
             return (
@@ -37,8 +28,7 @@ export default async function IndustryChildPage({
                 title={section.Title}
                 subtitle={section.Subtitle}
                 backgroundImage={
-                  section.BackgroundImage?.formats?.large ||
-                  section.BackgroundImage?.url
+                  section.BackgroundImage?.formats?.large || section.BackgroundImage?.url
                     ? {
                         url:
                           section.BackgroundImage?.url ||
@@ -58,9 +48,7 @@ export default async function IndustryChildPage({
                 title={section.title}
                 subtitle={section.subtitle}
                 content={section.content}
-                background={
-                  section.background ? { url: section.background.url } : undefined
-                }
+                background={section.background ? { url: section.background.url } : undefined}
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
@@ -76,9 +64,7 @@ export default async function IndustryChildPage({
                 title={section.title}
                 subtitle={section.subtitle}
                 content={section.content}
-                background={
-                  section.background ? { url: section.background.url } : undefined
-                }
+                background={section.background ? { url: section.background.url } : undefined}
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
@@ -93,9 +79,7 @@ export default async function IndustryChildPage({
                 key={index}
                 title={section.title}
                 items={section.item || []}
-                background={
-                  section.background ? { url: section.background.url } : undefined
-                }
+                background={section.background ? { url: section.background.url } : undefined}
               />
             );
 

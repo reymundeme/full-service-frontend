@@ -67,7 +67,7 @@ export default function ItemContent({
         <div className="relative z-10 text-center mt-4">
           <a
             href={buttonURL}
-             className="inline-block bg-[#48bdcb] text-black px-8 py-3 rounded-xl font-bold hover:bg-[#89e9f5] transition-colors duration-300 shadow-xl/40"
+             className="inline-block bg-[#48bdcb] text-black px-8 py-3 rounded-xl font-extrabold hover:bg-[#89e9f5] transition-colors duration-300 shadow-xl/40"
           >
             {buttonText}
           </a>
