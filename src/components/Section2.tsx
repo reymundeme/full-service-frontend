@@ -57,7 +57,7 @@ export default function Section2({
           {subtitle && <p className="text-lg md:text-2xl mb-6">{subtitle}</p>}
           {content && (
             <div
-              className="prose prose-invert mb-6 text-gray-200 text-left"
+              className="richtext text-left"
               dangerouslySetInnerHTML={{ __html: content }}
             />
           )}
