@@ -1,4 +1,4 @@
-"use client"; // if you plan to add interactivity later
+"use client";
 
 import Image from "next/image";
 
@@ -18,13 +18,14 @@ export default function Hero({
   buttonURL,
 }: HeroProps) {
   return (
-    <section className="relative flex items-center justify-center text-center text-white h-[600px]">
+    <section className="relative flex items-center justify-center text-center text-white h-[83vh]">
       {backgroundImage?.url && (
         <Image
           src={backgroundImage.url}
           alt={title}
           fill
           priority
+          quality={100}
           className="object-cover brightness-50"
         />
       )}
@@ -36,9 +37,7 @@ export default function Hero({
             href={buttonURL}
             className="inline-block bg-black text-white px-14 py-4 rounded-xl font-extrabold hover:text-black hover:bg-[#36a9b6] transition-colors duration-400 shadow-xl/40"
           >
-            <button>
             {buttonText}
-            </button>
           </a>
         )}
       </div>

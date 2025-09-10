@@ -1,7 +1,10 @@
 import Hero from "@/components/Hero";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
-import ItemSection from "@/components/ItemSection"; 
+import ItemSection from "@/components/ItemSection";
+import TextSection from "@/components/TextSection";
+import TextSectionLeft from "@/components/TextSectionLeft";
+
 
 async function getHomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
@@ -33,12 +36,12 @@ export default async function Home() {
                 subtitle={section.Subtitle}
                 backgroundImage={
                   section.BackgroundImage?.formats?.large ||
-                  section.BackgroundImage?.url
+                    section.BackgroundImage?.url
                     ? {
-                        url:
-                          section.BackgroundImage?.url ||
-                          section.BackgroundImage?.formats?.large?.url,
-                      }
+                      url:
+                        section.BackgroundImage?.url ||
+                        section.BackgroundImage?.formats?.large?.url,
+                    }
                     : undefined
                 }
                 buttonText={section.ButtonText}
@@ -82,12 +85,36 @@ export default async function Home() {
               />
             );
 
-          case "sections.item-section": 
+          case "sections.item-section":
             return (
               <ItemSection
                 key={index}
                 title={section.title}
                 items={section.item || []}
+                background={
+                  section.background ? { url: section.background.url } : undefined
+                }
+              />
+            );
+
+          case "sections.text-section": // <-- your new Strapi component name
+            return (
+              <TextSection
+                key={index}
+                title={section.title}
+                content={section.content}
+                background={
+                  section.background ? { url: section.background.url } : undefined
+                }
+              />
+            );
+
+          case "sections.text-section-left":
+            return (
+              <TextSectionLeft
+                key={index}
+                title={section.title}
+                content={section.content}
                 background={
                   section.background ? { url: section.background.url } : undefined
                 }
