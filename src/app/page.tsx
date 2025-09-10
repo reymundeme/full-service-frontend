@@ -109,7 +109,7 @@ export default async function Home() {
               />
             );
 
-          case "sections.text-section-left":
+          case "sections.text-left-section":
             return (
               <TextSectionLeft
                 key={index}
