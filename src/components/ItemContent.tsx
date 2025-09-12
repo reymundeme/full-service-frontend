@@ -22,7 +22,7 @@ export default function ItemContent({
 }: ItemContentProps) {
   return (
     <div
-      className="relative p-6 rounded-2xl shadow-lg text-white w-full flex flex-col justify-between bg-black"
+      className="relative p-6 rounded-2xl text-white w-full flex flex-col justify-between bg-black shadow-xl/40"
       style={{
         backgroundImage: background?.url ? `url(${background.url})` : undefined,
         backgroundSize: "cover",

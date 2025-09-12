@@ -9,7 +9,7 @@ import TextSectionLeft from "@/components/TextSectionLeft";
 async function getHomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
   const res = await fetch(
-    `${baseUrl}/api/pages?filters[slug][$eq]=home&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon`,
+    `${baseUrl}/api/pages?filters[slug][$eq]=home&populate[sections][populate]=*`,
     { cache: "no-store" }
   );
 
