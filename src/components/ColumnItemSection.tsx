@@ -6,6 +6,7 @@ interface ColumnItem {
   id: number;
   title: string;
   short_description: string;
+   URL: string; 
   image?: {
     url: string;
     alternativeText?: string;
@@ -49,6 +50,7 @@ export default function ColumnItemSection({
               <ColumnItemContent
                 title={item.title}
                 short_description={item.short_description}
+                 URL={item.URL}
                 image={item.image}
               />
             </div>
