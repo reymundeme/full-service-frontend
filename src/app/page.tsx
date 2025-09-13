@@ -4,12 +4,12 @@ import Section2 from "@/components/Section2";
 import ItemSection from "@/components/ItemSection";
 import TextSection from "@/components/TextSection";
 import TextSectionLeft from "@/components/TextSectionLeft";
-
+import ColumnItemSection from "@/components/ColumnItemSection"; // 👈 import new component
 
 async function getHomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
   const res = await fetch(
-    `${baseUrl}/api/pages?filters[slug][$eq]=home&populate[sections][populate]=*`,
+    `${baseUrl}/api/pages?filters[slug][$eq]=home&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.column_item_content.image`,
     { cache: "no-store" }
   );
 
@@ -36,12 +36,12 @@ export default async function Home() {
                 subtitle={section.Subtitle}
                 backgroundImage={
                   section.BackgroundImage?.formats?.large ||
-                    section.BackgroundImage?.url
+                  section.BackgroundImage?.url
                     ? {
-                      url:
-                        section.BackgroundImage?.url ||
-                        section.BackgroundImage?.formats?.large?.url,
-                    }
+                        url:
+                          section.BackgroundImage?.url ||
+                          section.BackgroundImage?.formats?.large?.url,
+                      }
                     : undefined
                 }
                 buttonText={section.ButtonText}
@@ -97,7 +97,7 @@ export default async function Home() {
               />
             );
 
-          case "sections.text-section": // <-- your new Strapi component name
+          case "sections.text-section":
             return (
               <TextSection
                 key={index}
@@ -118,6 +118,18 @@ export default async function Home() {
                 background={
                   section.background ? { url: section.background.url } : undefined
                 }
+              />
+            );
+
+          case "sections.column-item-section": // 👈 NEW CASE
+            return (
+              <ColumnItemSection
+                key={index}
+                title={section.title}
+                background={
+                  section.background ? { url: section.background.url } : undefined
+                }
+                column_item_content={section.column_item_content || []}
               />
             );
 
