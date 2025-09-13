@@ -33,11 +33,14 @@ export default function Section2({
           alt={title}
           fill
           priority
-          className="object-cover brightness-50 -z-10"
+          className="object-cover brightness-60 -z-10"
         />
       )}
 
+      <h1 className="text-4xl md:text-7xl font-bold mb-12 2xl:mb-24 text-center lg:px-10 text-shadow-lg">{title}</h1>
+
       <div className="relative z-10 max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center text-center lg:text-left">
+     
         {/* Left column */}
         {image?.url && (
           <div className="flex justify-center">
@@ -46,18 +49,16 @@ export default function Section2({
               alt={title}
               width={600}
               height={400}
-              className="rounded-lg shadow-lg"
+              className="rounded-lg shadow"
             />
           </div>
         )}
 
         {/* Right column */}
         <div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">{title}</h2>
-          {subtitle && <p className="text-lg md:text-2xl mb-6">{subtitle}</p>}
           {content && (
             <div
-              className="richtext text-left"
+              className="richtext text-left text-shadow-md"
               dangerouslySetInnerHTML={{ __html: content }}
             />
           )}

@@ -53,9 +53,8 @@ export default function ColumnItemContent({
       <div className="mt-2 md:mt-8">
         {URL ? (
           <Link href={URL}
-            className="hover:brightness-60 transition inline-block"
           >
-            <h3 className="text-4xl font-semibold mb-2 text-white text-shadow-lg"  >
+            <h3 className="text-4xl font-semibold mb-2 text-white text-shadow-lg hover:brightness-60 transition inline-block"  >
               {title}
             </h3>
           </Link>

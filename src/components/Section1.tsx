@@ -26,32 +26,31 @@ export default function Section1({
   buttonURL2,
 }: Section1Props) {
   return (
-    <section className="relative py-36 text-white">
+    <section className="relative py-16 2xl:py-42 text-white">
       {background?.url && (
         <Image
           src={background.url}
           alt={title}
           fill
           priority
-          className="object-cover brightness-50 -z-10"
+          className="object-cover -z-10"
         />
       )}
 
+      <h1 className="text-4xl md:text-7xl font-bold mb-12 2xl:mb-24 text-center lg:px-10 ">{title}</h1>
       <div className="relative z-10 max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center text-center lg:text-left">
         {/* Left column */}
         <div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">{title}</h2>
-          {subtitle && <p className="text-lg md:text-2xl mb-6">{subtitle}</p>}
 
           {content && (
             <div
-              className="richtext text-left"
+              className="richtext 2xl:text-left text-shadow-lg"
               dangerouslySetInnerHTML={{ __html: content }}
             />
           )}
 
           {/* Buttons */}
-          <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+          <div className="flex flex-wrap justify-center lg:justify-start gap-8 pt-6">
             {buttonText && buttonURL && (
               <a
                 href={buttonURL}
