@@ -2,13 +2,16 @@ import Hero from "@/components/Hero";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
 import ItemSection from "@/components/ItemSection";
+import TextSection from "@/components/TextSection";
+import TextSectionLeft from "@/components/TextSectionLeft";
+import ColumnItemSection from "@/components/ColumnItemSection";
 
 export default async function IndustryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
   const res = await fetch(
-    `${baseUrl}/api/child-pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.item.background`,
+    `${baseUrl}/api/child-pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.item.background&populate=sections.column_item_content.image`,
     { cache: "no-store" }
   );
 
@@ -80,6 +83,36 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
                 title={section.title}
                 items={section.item || []}
                 background={section.background ? { url: section.background.url } : undefined}
+              />
+            );
+
+          case "sections.text-section":
+            return (
+              <TextSection
+                key={index}
+                title={section.title}
+                content={section.content}
+                background={section.background ? { url: section.background.url } : undefined}
+              />
+            );
+
+          case "sections.text-left-section":
+            return (
+              <TextSectionLeft
+                key={index}
+                title={section.title}
+                content={section.content}
+                background={section.background ? { url: section.background.url } : undefined}
+              />
+            );
+
+          case "sections.column-item-section":
+            return (
+              <ColumnItemSection
+                key={index}
+                title={section.title}
+                background={section.background ? { url: section.background.url } : undefined}
+                column_item_content={section.column_item_content || []}
               />
             );
 

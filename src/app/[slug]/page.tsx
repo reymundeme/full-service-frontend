@@ -2,13 +2,16 @@ import Hero from "@/components/Hero";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
 import ItemSection from "@/components/ItemSection";
+import TextSection from "@/components/TextSection";
+import TextSectionLeft from "@/components/TextSectionLeft";
+import ColumnItemSection from "@/components/ColumnItemSection";
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params; // ✅ await params here
+  const { slug } = await params;
 
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
   const res = await fetch(
-    `${baseUrl}/api/pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon`,
+    `${baseUrl}/api/pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.column_item_content.image`,
     { cache: "no-store" }
   );
 
@@ -30,10 +33,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 backgroundImage={
                   section.BackgroundImage?.formats?.large || section.BackgroundImage?.url
                     ? {
-                      url:
-                        section.BackgroundImage?.url ||
-                        section.BackgroundImage?.formats?.large?.url,
-                    }
+                        url:
+                          section.BackgroundImage?.url ||
+                          section.BackgroundImage?.formats?.large?.url,
+                      }
                     : undefined
                 }
                 buttonText={section.ButtonText}
@@ -68,8 +71,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 image={section.image ? { url: section.image.url } : undefined}
                 buttonText={section.button_text}
                 buttonURL={section.button_url}
-                buttonText2={section.button_text_2}   // ✅ Add this
-                buttonURL2={section.button_url_2}     // ✅ Add this
+                buttonText2={section.button_text_2}
+                buttonURL2={section.button_url_2}
               />
             );
 
@@ -79,9 +82,37 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 key={index}
                 title={section.title}
                 items={section.item || []}
-                background={
-                  section.background ? { url: section.background.url } : undefined
-                }
+                background={section.background ? { url: section.background.url } : undefined}
+              />
+            );
+
+          case "sections.text-section":
+            return (
+              <TextSection
+                key={index}
+                title={section.title}
+                content={section.content}
+                background={section.background ? { url: section.background.url } : undefined}
+              />
+            );
+
+          case "sections.text-left-section":
+            return (
+              <TextSectionLeft
+                key={index}
+                title={section.title}
+                content={section.content}
+                background={section.background ? { url: section.background.url } : undefined}
+              />
+            );
+
+          case "sections.column-item-section":
+            return (
+              <ColumnItemSection
+                key={index}
+                title={section.title}
+                background={section.background ? { url: section.background.url } : undefined}
+                column_item_content={section.column_item_content || []}
               />
             );
 
