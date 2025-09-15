@@ -40,16 +40,15 @@ export default function Section2({
       <h1 className="text-4xl md:text-7xl font-bold mb-12 2xl:mb-24 text-center lg:px-10 text-shadow-lg">{title}</h1>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center text-center lg:text-left">
-     
+
         {/* Left column */}
         {image?.url && (
-          <div className="flex justify-center">
+          <div className="relative w-full h-full min-h-[400px]">
             <Image
               src={image.url}
-              alt={title}
-              width={600}
-              height={400}
-              className="rounded-lg shadow"
+              alt={title || "Section image"}
+              fill
+              className="object-cover rounded-lg shadow-lg"
             />
           </div>
         )}

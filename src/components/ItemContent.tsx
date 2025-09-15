@@ -38,7 +38,7 @@ export default function ItemContent({
       <div className="relative z-10">
 
          {/* Title */}
-        <h3 className="text-xl font-bold mb-2 text-center">{title}</h3>
+        <h3 className="text-2xl font-bold mb-2 text-center">{title}</h3>
 
         {/* Icon */}
         {icon?.url && (
@@ -57,7 +57,7 @@ export default function ItemContent({
 
         {/* Description */}
         <div
-          className="prose prose-invert text-sm mb-4 text-center"
+          className="richtext text-sm mb-4 text-center"
           dangerouslySetInnerHTML={{ __html: description }}
         />
       </div>

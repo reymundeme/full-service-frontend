@@ -14,7 +14,7 @@ export default function TextSection({ title, content, background }: TextSectionP
       {background?.url && (
         <Image
           src={background.url}
-          alt={title}
+          alt={title || "Background image"}
           fill
           quality={100}
           priority
@@ -24,12 +24,14 @@ export default function TextSection({ title, content, background }: TextSectionP
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-left">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">{title}</h2>
+
         {content && (
           <div
-            className="richtext text-lg md:text-xl mx-auto"
+            className="richtext text-lg md:text-xl mx-auto text-shadow-xl"
             dangerouslySetInnerHTML={{ __html: content }}
           />
         )}
+
       </div>
     </section>
   );
