@@ -35,7 +35,7 @@ export default function ItemSection({ title, items, background }: ItemSectionPro
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Title */}
-        <h1 className="text-4xl md:text-7xl font-bold text-center mb-18 md:mb-32">{title}</h1>
+        <h1 className="text-4xl md:text-7xl font-bold text-center mb-18 md:mb-32 text-shadow-lg">{title}</h1>
 
         {/* Items */}
         <div className="flex flex-wrap justify-center gap-8">

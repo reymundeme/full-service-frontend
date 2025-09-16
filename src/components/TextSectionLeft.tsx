@@ -22,12 +22,12 @@ export default function TextSection({ title, content, background }: TextSectionP
         />
       )}
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-left">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-left text-shadow-xl">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">{title}</h2>
 
         {content && (
           <div
-            className="richtext text-lg md:text-xl mx-auto text-shadow-xl"
+            className="richtext text-lg md:text-xl mx-auto"
             dangerouslySetInnerHTML={{ __html: content }}
           />
         )}

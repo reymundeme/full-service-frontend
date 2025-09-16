@@ -34,7 +34,11 @@ export default function Hero({
       {/* Content at the bottom of the image */}
       <div className="absolute bottom-0 2xl:bottom-14 left-1/2 transform -translate-x-1/2 w-full px-6 py-12 text-center z-10">
         <h1 className="text-4xl md:text-6xl 2xl:text-7xl font-bold mb-4 text-shadow-lg max-w-3xl lg:max-w-4xl text-center mx-auto">{title}</h1>
-        <p className="text-lg md:text-3xl mb-6 text-shadow-xl max-w-4xl mx-auto">{subtitle}</p>
+
+        {subtitle && (
+          <p className="text-lg md:text-3xl mb-6 text-shadow-xl max-w-4xl mx-auto">{subtitle}</p>
+        )}
+
         {buttonText && buttonURL && (
           <a
             href={buttonURL}
