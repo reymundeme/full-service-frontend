@@ -60,9 +60,16 @@ export default function Navbar() {
     fetchData();
   }, []);
 
+  // Close mobile menu whenever the route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setMobileOpenPageId(null);
+  }, [pathname]);
+
   if (!mounted) return null;
 
-  const getChildren = (pageId: number) => childPages.filter((child) => child.page?.id === pageId);
+  const getChildren = (pageId: number) =>
+    childPages.filter((child) => child.page?.id === pageId);
 
   return (
     <nav className="sticky top-0 z-50 bg-black text-white px-6 py-7 md:pr-15 lg:pr-25 whitespace-nowrap">
