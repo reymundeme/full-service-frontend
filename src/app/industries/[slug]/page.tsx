@@ -5,19 +5,26 @@ import ItemSection from "@/components/ItemSection";
 import TextSection from "@/components/TextSection";
 import TextSectionLeft from "@/components/TextSectionLeft";
 import ColumnItemSection from "@/components/ColumnItemSection";
+import { draftMode } from "next/headers";
 
 export default async function IndustryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const dm = await draftMode();
+  const isPreview = dm.isEnabled;
 
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
   const res = await fetch(
-    `${baseUrl}/api/child-pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.item.background&populate=sections.column_item_content.image`,
-    { cache: "no-store" }
+    `${baseUrl}/api/child-pages?filters[slug][$eq]=${slug}&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.item.background&populate=sections.column_item_content.image${isPreview ? "&publicationState=preview" : ""}`,
+    {
+      cache: isPreview ? "no-store" : "force-cache",
+      headers: {
+        Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`,
+      },
+    }
   );
 
   const json = await res.json();
   const industry = json.data?.[0];
-
   if (!industry) return <div>Industry page not found</div>;
 
   return (
@@ -32,11 +39,7 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
                 subtitle={section.Subtitle}
                 backgroundImage={
                   section.BackgroundImage?.formats?.large || section.BackgroundImage?.url
-                    ? {
-                        url:
-                          section.BackgroundImage?.url ||
-                          section.BackgroundImage?.formats?.large?.url,
-                      }
+                    ? { url: section.BackgroundImage?.url || section.BackgroundImage?.formats?.large?.url }
                     : undefined
                 }
                 buttonText={section.ButtonText}
@@ -120,6 +123,7 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
             return null;
         }
       })}
+      {isPreview && <div style={{ color: "red" }}>Preview Mode</div>}
     </main>
   );
 }
