@@ -5,5 +5,5 @@ export async function GET(req: Request) {
   const dm = await draftMode();
   dm.disable();
 
-  return NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"));
+  return NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_SITE_URL || "http://104.248.127.3"));
 }

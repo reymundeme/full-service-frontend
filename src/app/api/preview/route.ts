@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const path = slug === "/home" ? "/" : slug;
 
     return NextResponse.redirect(
-      new URL(path, process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000")
+      new URL(path, process.env.NEXT_PUBLIC_SITE_URL || "http://104.248.127.3")
     );
   } catch (err) {
     console.error("Preview error:", err);
