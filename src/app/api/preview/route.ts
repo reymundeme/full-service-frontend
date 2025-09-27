@@ -1,4 +1,3 @@
-// next.js app/api/preview/route.ts
 import { draftMode } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -13,13 +12,14 @@ export async function GET(req: Request) {
       return new NextResponse("Invalid token", { status: 401 });
     }
 
-    // Await the draftMode() function to get the object
+    // Enable draft mode (async in Next 15)
     const dm = await draftMode();
     dm.enable();
 
-    // The key change is here: construct the redirect URL with a full path
-    const url = new URL(slug, req.url);
-    
+    // Redirect to the actual page on your site
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://104.248.127.3";
+    const url = new URL(slug, siteUrl);
+
     return NextResponse.redirect(url);
   } catch (err) {
     console.error("Preview error:", err);

@@ -8,10 +8,15 @@ import ColumnItemSection from "@/components/ColumnItemSection";
 import { draftMode } from "next/headers";
 
 export default async function HomePage() {
+  // Draft mode is async in Next.js 15
   const dm = await draftMode();
   const isPreview = dm.isEnabled;
 
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+  if (!baseUrl) {
+    throw new Error("Missing NEXT_PUBLIC_STRAPI_URL in environment");
+  }
+
   const res = await fetch(
     `${baseUrl}/api/pages?filters[slug][$eq]=home&populate=sections.background&populate=sections.image&populate=sections.BackgroundImage&populate=sections.item.icon&populate=sections.column_item_content.image${isPreview ? "&publicationState=preview" : ""}`,
     {
@@ -21,6 +26,11 @@ export default async function HomePage() {
       },
     }
   );
+
+  if (!res.ok) {
+    console.error("Failed to fetch page data:", res.status, res.statusText);
+    return <div>Failed to load page</div>;
+  }
 
   const json = await res.json();
   const page = json.data?.[0];
@@ -37,7 +47,8 @@ export default async function HomePage() {
                 title={section.Title}
                 subtitle={section.Subtitle}
                 backgroundImage={
-                  section.BackgroundImage?.formats?.large || section.BackgroundImage?.url
+                  section.BackgroundImage?.url ||
+                  section.BackgroundImage?.formats?.large?.url
                     ? { url: section.BackgroundImage?.url || section.BackgroundImage?.formats?.large?.url }
                     : undefined
                 }
@@ -122,7 +133,20 @@ export default async function HomePage() {
             return null;
         }
       })}
-      {isPreview && <div style={{ color: "red" }}>Preview Mode</div>}
+      {isPreview && (
+        <div
+          style={{
+            background: "black",
+            color: "white",
+            padding: "8px 12px",
+            position: "fixed",
+            bottom: "10px",
+            right: "10px",
+            borderRadius: "4px",
+          }}
+        >
+        </div>
+      )}
     </main>
   );
 }
