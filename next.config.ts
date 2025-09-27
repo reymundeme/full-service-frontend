@@ -14,6 +14,26 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          // Allow Strapi admin to embed your frontend in an iframe
+          {
+            key: "X-Frame-Options",
+            value: "ALLOW-FROM https://precious-dinosaur-99506b8ce1.strapiapp.com",
+          },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://precious-dinosaur-99506b8ce1.strapiapp.com",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
